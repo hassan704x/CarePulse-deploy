@@ -3,15 +3,15 @@ import { getUser } from "@/lib/actions/patient.actions";
 import Image from "next/image";
 import React from "react";
 
-
 interface SearchParamProps {
-  params: {
+  params: Promise<{
     userId: string;
-  };
+  }>;
 }
 
-const Register = async ({ params: { userId } }: SearchParamProps) => {
-  const user = await getUser(userId);
+const Register = async ({ params }: SearchParamProps) => {
+  const resolvedParams = await params;
+  const user = await getUser(resolvedParams.userId);
   console.log(user);
 
   // const safeUser = {
@@ -33,7 +33,7 @@ const Register = async ({ params: { userId } }: SearchParamProps) => {
             className="ml-10 mt-20 mb-12 h-10 w-fit"
           />
 
-          <RegisterForm user={userId} />
+          <RegisterForm user={resolvedParams.userId} />
 
           <p className="copyright py-12">
             © 2024 CarePulse
