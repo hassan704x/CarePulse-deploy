@@ -2,13 +2,13 @@ import Image from "next/image";
 import AppointmentForm from "@/components/forms/AppointmentForm";
 import { getPatient } from "@/lib/actions/patient.actions";
 
-interface PageProps {
+type Props = {
   params: {
     userId: string;
   };
-}
+};
 
-const Appointment = async ({ params }: PageProps) => {
+export default async function Appointment({ params }: Props) {
   const patient = await getPatient(params.userId);
 
   return (
@@ -42,6 +42,4 @@ const Appointment = async ({ params }: PageProps) => {
       />
     </div>
   );
-};
-
-export default Appointment;
+}
