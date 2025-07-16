@@ -1,14 +1,25 @@
+// src/app/appointment/[userId]/page.tsx
+
+import { Metadata } from "next";
 import Image from "next/image";
 import AppointmentForm from "@/components/forms/AppointmentForm";
 import { getPatient } from "@/lib/actions/patient.actions";
 
-type Props = {
+// This is the correct shape expected by Next.js App Router
+interface PageProps {
   params: {
     userId: string;
   };
-};
+}
 
-export default async function Appointment({ params }: Props) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  return {
+    title: `Appointment | CarePulse`,
+    description: `Book appointment for user ${params.userId}`,
+  };
+}
+
+export default async function AppointmentPage({ params }: PageProps) {
   const patient = await getPatient(params.userId);
 
   return (
