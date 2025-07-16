@@ -7,21 +7,24 @@ import Link from 'next/link';
 import React from 'react';
 
 interface SearchParamProps {
-  params: {
+  params: Promise<{
     userId: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     appointmentId?: string;
-  };
+  }>;
 }
 
-const Success = async ({ params: { userId }, searchParams }: SearchParamProps) => {
-  const appointmentId = searchParams?.appointmentId || '';
+const Success = async ({ params, searchParams }: SearchParamProps) => {
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
+  
+  const appointmentId = resolvedSearchParams?.appointmentId || '';
   const appointment = await getAppointment(appointmentId);
 
-  const doctor = Doctors.find(
-    (doc) => doc.name === appointment?.primaryPhysician
-  );
+ const doctor = Doctors.find(
+  (doc) => doc.name === (appointment as  & { primaryPhysician?: string })?.primaryPhysician
+);
 
   return (
     <div className="flex h-screen max-h-screen px-[5%] items-center justify-center">
@@ -82,7 +85,7 @@ const Success = async ({ params: { userId }, searchParams }: SearchParamProps) =
 
         <div className="mt-6">
           <Button variant="outline" className="shad-primary-btn" asChild>
-            <Link href={`/patients/${userId}/new-appointment`}>
+            <Link href={`/patients/${resolvedParams.userId}/new-appointment`}>
               New Appointment
             </Link>
           </Button>
