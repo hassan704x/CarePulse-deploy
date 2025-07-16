@@ -1,20 +1,18 @@
-
-
 import Image from "next/image";
 import AppointmentForm from "@/components/forms/AppointmentForm";
 import { getPatient } from "@/lib/actions/patient.actions";
 
-interface SearchParamProps {
+interface PageProps {
   params: {
     userId: string;
   };
 }
 
-const Appointment = async ({ params: { userId } }: SearchParamProps) => {
-  const patient = await getPatient(userId);
+const Appointment = async ({ params }: PageProps) => {
+  const patient = await getPatient(params.userId);
 
   return (
-    <div className="flex h-screen max-h-screen ml-10 mt-10" >
+    <div className="flex h-screen max-h-screen ml-10 mt-10">
       <section className="remove-scrollbar container my-auto">
         <div className="sub-container max-w-[860px] flex-1 justify-between">
           <Image
@@ -22,12 +20,12 @@ const Appointment = async ({ params: { userId } }: SearchParamProps) => {
             height={1000}
             width={1000}
             alt="logo"
-            className="mb-12  h-10 w-fit"
+            className="mb-12 h-10 w-fit"
           />
 
           <AppointmentForm
             patientId={patient?.$id || ""}
-            userId={userId}
+            userId={params.userId}
             type="create"
           />
 
